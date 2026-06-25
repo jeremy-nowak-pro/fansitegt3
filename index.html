@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Porsche GT3 RS — L'évolution d'une légende</title>
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 1 — HERO (Three.js)
+══════════════════════════════════════════════════════ -->
+<section id="s1">
+  <canvas id="hero-canvas"></canvas>
+  <!-- Overlay noir qui disparaît pour révéler la voiture (évite la transparence 3D) -->
+  <div id="hero-overlay"></div>
+
+  <div class="hero-content">
+    <p class="hero-overline">Porsche 911</p>
+
+    <h1 class="hero-title">
+      <span>GT3 RS</span>
+      L'ultime
+    </h1>
+
+    <p class="hero-sub">
+      Ce que vous voyez est l'aboutissement.<br>
+      Vingt ans de radicalité, distillés dans une seule machine.<br>
+      Ce qui suit, c'est comment on y est arrivé.
+    </p>
+  </div>
+
+  <a class="scroll-cta" href="#s2">
+    <div class="scroll-cta-line" id="scroll-line"></div>
+  </a>
+
+  <div class="hero-meta">
+    <div class="hero-model-tag">992 GT3 RS</div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-meta-label">Puissance</div>
+        <div class="hero-meta-value">525<span class="hero-meta-unit"> ch</span></div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-meta-label">Poids</div>
+        <div class="hero-meta-value">1 450<span class="hero-meta-unit"> kg</span></div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-meta-label">0 – 100</div>
+        <div class="hero-meta-value">3.2<span class="hero-meta-unit"> s</span></div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-meta-label">Vmax</div>
+        <div class="hero-meta-value">296<span class="hero-meta-unit"> km/h</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 — LISTE CHRONOLOGIQUE
+     Les lignes sont injectées dynamiquement par app.js
+     depuis GT3RS_MODELS (data.js).
+══════════════════════════════════════════════════════ -->
+<section id="s2">
+
+  <div class="s2-header">
+    <div>
+      <p class="s2-eyebrow">02 / Les générations</p>
+      <h2 class="s2-title"><span id="s2-model-count">7</span> modèles.<br>Vingt ans.</h2>
+    </div>
+  </div>
+
+  <!-- En-tête colonnes : modèle (variante + année + moteur) | ch | 0-100 | vmax -->
+  <div class="cars-table-head">
+    <span>Modèle</span>
+    <span>Ch</span>
+    <span>0 – 100</span>
+    <span>Vmax</span>
+  </div>
+
+  <!-- Lignes injectées par app.js -->
+  <div id="cars-list"></div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 3 — Timeline des générations
+══════════════════════════════════════════════════════ -->
+<section id="s3">
+
+  <div class="s3-header">
+    <p class="s3-eyebrow">03 / Timeline des générations</p>
+    <h2 class="s3-title">Vingt ans.<br>Une trajectoire.</h2>
+  </div>
+
+  <div class="s3-rail">
+    <div class="s3-line-bg"></div>
+    <div class="s3-line-fill" id="s3-line-fill"></div>
+    <div class="s3-cards" id="s3-cards">
+      <!-- Injecté par app.js depuis GT3RS_GENERATIONS -->
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 4 — Évolution graphique
+══════════════════════════════════════════════════════ -->
+<section id="s4">
+
+  <div class="s4-header">
+    <p class="s4-eyebrow">04 / Évolution</p>
+    <h2 class="s4-title">Les chiffres<br>racontent l'histoire.</h2>
+  </div>
+
+  <div class="s4-bottom">
+    <div class="s4-toggle" id="s4-toggle">
+      <button class="s4-btn active" data-metric="hp">Puissance</button>
+      <button class="s4-btn" data-metric="sprint">0 – 100</button>
+      <button class="s4-btn" data-metric="vmax">Vmax</button>
+    </div>
+    <div class="s4-bars" id="s4-bars">
+      <!-- Injecté par app.js -->
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 5 — GT3 RS 992 · 3D + Hotspots (placeholder)
+══════════════════════════════════════════════════════ -->
+<section id="s5" class="section-placeholder" style="background:#f0efec;">
+  <h2>Section 05</h2>
+  <p>GT3 RS 992 · Modèle 3D + Hotspots</p>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════
+     SCRIPTS
+     Ordre obligatoire :
+       1. Three.js (requis par hero.js)
+       2. GSAP + ScrollTrigger (requis par app.js)
+       3. data.js  — GT3RS_MODELS
+       4. hero.js  — Three.js scene
+       5. app.js   — GSAP + DOM
+══════════════════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script src="./js/data.js"></script>
+<script src="./js/hero.js"></script>
+<script src="./js/app.js"></script>
+
+</body>
+</html>

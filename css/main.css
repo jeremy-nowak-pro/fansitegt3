@@ -1,0 +1,793 @@
+/* ═══════════════════════════════════════════════════════
+   MAIN.CSS — GT3 RS Fansite
+   Theme : Noir cinématique / Blanc épuré (press-style)
+═══════════════════════════════════════════════════════ */
+
+/* ─── Reset ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* ── Identité ── */
+  --black:   #080808;   /* fond hero */
+  --white:   #f8f7f4;   /* fond sections claires */
+  --accent:  #e8620a;   /* Orange Racing — unique couleur d'accentuation */
+  --font:    'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* ── Surface sombre (hero) ── */
+  --dark-hi:   #ffffff;                 /* titres, valeurs stats */
+  --dark-mid:  #b0aca6;                 /* sous-titres, unités, texte secondaire */
+  --dark-lo:   rgba(255,255,255,0.30);  /* labels, metadata tertiaire */
+  --dark-line: rgba(255,255,255,0.10);  /* séparateurs discrets */
+
+  /* ── Surface claire (section 2+) ── */
+  --light-hi:    #111111;  /* noms modèles, stats — principal */
+  --light-mid:   #5a5a5a;  /* années — secondaire lisible */
+  --light-lo:    #a8a49e;  /* moteur — détail technique */
+  --light-ghost: #c8c4bc;  /* 996, 997… — décoratif structurel */
+  --light-line:  #d4d0c8;  /* traits séparateurs */
+  --light-bg:    #f5f3f0;  /* fond section 2 */
+}
+
+html { background: var(--black); }
+body { background: var(--black); font-family: var(--font); color: var(--white); overflow-x: hidden; }
+
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 1 — HERO
+═══════════════════════════════════════════════════════ */
+
+#s1 {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--black);
+}
+
+/* Overlay de révélation — cache la scène jusqu'au chargement */
+#hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: #080808;
+  z-index: 5;
+  pointer-events: none;
+}
+
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Dégradé gauche */
+#s1::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(8,8,8,0.85) 0%,
+    rgba(8,8,8,0.40) 45%,
+    rgba(8,8,8,0.00) 75%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Dégradé bas */
+#s1::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 180px;
+  background: linear-gradient(to bottom, transparent, var(--black));
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 7vw;
+  transform: translateY(-50%);
+  z-index: 10;
+  max-width: 600px;
+}
+
+.hero-overline {
+  font-size: 0.9rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--dark-hi);
+  font-weight: 300;
+  margin-bottom: 18px;
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.hero-title {
+  font-size: clamp(4rem, 10vw, 10rem);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  color: var(--dark-hi);
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.hero-title span {
+  display: block;
+  font-size: clamp(2rem, 5vw, 5rem);
+  font-weight: 300;
+  letter-spacing: 0.28em;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.hero-sub {
+  font-size: 0.82rem;
+  letter-spacing: 0.15em;
+  color: var(--dark-mid);
+  font-weight: 300;
+  opacity: 0;
+  transform: translateY(12px);
+  max-width: 320px;
+  line-height: 1.7;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 32px;
+  opacity: 0;
+}
+
+.badge-item {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dark-lo);
+  padding: 6px 14px;
+  border: 0.5px solid var(--dark-line);
+}
+
+.badge-item.active {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.scroll-cta {
+  position: absolute;
+  bottom: 42px;
+  left: 7vw;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.scroll-cta-line {
+  width: 36px;
+  height: 0.5px;
+  background: var(--accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.scroll-cta-text {
+  font-size: 0.65rem;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--dark-mid);
+}
+
+.hero-meta {
+  position: absolute;
+  bottom: 42px;
+  right: 6vw;
+  z-index: 10;
+  text-align: right;
+  opacity: 0;
+}
+
+.hero-meta-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--dark-lo);
+  margin-bottom: 4px;
+}
+
+.hero-meta-value {
+  font-size: 1.8rem;
+  font-weight: 200;
+  color: var(--dark-hi);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.hero-meta-unit {
+  font-size: 0.75rem;
+  color: var(--dark-mid);
+  margin-left: 4px;
+}
+
+.hero-meta-sep {
+  font-size: 0.9rem;
+  color: var(--dark-lo);
+  font-weight: 200;
+  margin: 0 2px;
+}
+
+.hero-model-tag {
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 300;
+  margin-bottom: 14px;
+  text-align: right;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 0;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.hero-stat + .hero-stat {
+  border-left: 0.5px solid var(--dark-line);
+  padding-left: 22px;
+  margin-left: 22px;
+}
+
+.hero-engine-tag {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dark-lo);
+  font-weight: 300;
+  text-align: right;
+  margin-top: 12px;
+}
+
+.section-number {
+  position: absolute;
+  top: 48px;
+  right: 6vw;
+  z-index: 10;
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  color: var(--dark-line);
+  opacity: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 2 — LISTE PAR GÉNÉRATIONS
+═══════════════════════════════════════════════════════ */
+
+#s2 {
+  background: var(--light-bg);
+  color: var(--light-hi);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 0 0;
+  box-sizing: border-box;
+}
+
+.s2-header {
+  flex-shrink: 0;
+  padding: 0 7vw;
+  margin-bottom: 24px;
+}
+
+.s2-eyebrow {
+  font-size: 0.58rem;
+  letter-spacing: 0.44em;
+  text-transform: uppercase;
+  color: var(--light-lo);
+  margin-bottom: 6px;
+}
+
+.s2-title {
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  font-weight: 200;
+  color: var(--light-hi);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+/* ── En-tête colonnes ── */
+.cars-table-head {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  padding: 0 7vw 10px;
+  border-bottom: 1px solid var(--light-line);
+}
+
+.cars-table-head span {
+  font-size: 0.5rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--light-ghost);
+}
+
+.cars-table-head span:nth-child(n+2) { text-align: right; }
+
+/* ── Liste des générations ── */
+#cars-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Groupe génération ── */
+.gen-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.gen-group + .gen-group { border-top: 1px solid var(--light-line); }
+.gen-group { padding-bottom: 0; }
+
+/* ── Titre de génération ── */
+.gen-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 7vw 6px;
+}
+
+.gen-label {
+  font-size: clamp(1.44rem, 2.08vw, 2.4rem);
+  font-weight: 100;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.gen-range {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--light-lo);
+  align-self: flex-end;
+  padding-bottom: 7px;
+}
+
+.gen-tag { display: none; }
+
+/* ── Lignes modèles ── */
+.gen-models {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.car-row {
+  flex: 1;
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  align-items: end;
+  padding: 6px 7vw 16px;
+  cursor: default;
+  transition: background 0.15s;
+}
+
+.car-row:hover { background: rgba(0,0,0,0.025); }
+
+.car-name-block {
+  min-width: 0;
+  overflow: hidden;
+  padding-right: 16px;
+}
+
+.car-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 3px;
+}
+
+.car-variant-title {
+  font-size: clamp(0.75rem, 0.95vw, 0.88rem);
+  font-weight: 500;
+  color: var(--light-hi);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.car-year-tag {
+  font-size: 0.58rem;
+  color: var(--light-mid);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.car-engine {
+  font-size: 0.56rem;
+  color: var(--light-lo);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.car-badge { display: none; }
+
+.car-stat {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.car-stat-num {
+  font-size: clamp(0.95rem, 1.3vw, 1.4rem);
+  font-weight: 200;
+  color: var(--light-hi);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.car-stat-unit { display: none; }
+
+
+/* ═══════════════════════════════════════════════════════
+   SECTIONS SUIVANTES (placeholders)
+═══════════════════════════════════════════════════════ */
+
+.section-placeholder {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-placeholder h2 {
+  font-size: 0.65rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--light-ghost);
+  font-weight: 400;
+}
+
+.section-placeholder p {
+  font-size: 2rem;
+  font-weight: 200;
+  color: #222;
+  letter-spacing: -0.01em;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 3 — TIMELINE DES GÉNÉRATIONS
+═══════════════════════════════════════════════════════ */
+
+#s3 {
+  background: var(--black);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 7vw 56px;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--black);
+}
+
+.s3-header {
+  flex-shrink: 0;
+}
+
+.s3-eyebrow {
+  font-size: 0.58rem;
+  letter-spacing: 0.44em;
+  text-transform: uppercase;
+  color: var(--dark-mid);
+  margin-bottom: 10px;
+  opacity: 0.65;
+}
+
+.s3-title {
+  font-size: clamp(2.4rem, 4vw, 4.5rem);
+  font-weight: 200;
+  color: var(--dark-hi);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* ── Rail ── */
+.s3-rail {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.s3-line-bg {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  height: 0.5px;
+  background: var(--dark-line);
+}
+
+.s3-line-fill {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 0%;
+  height: 0.5px;
+  background: var(--accent);
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Cards ── */
+.s3-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  position: relative;
+}
+
+.s3-card {
+  padding-top: 28px;
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.s3-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--black);
+  border: 0.5px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 18px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.s3-card.current .s3-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 5px rgba(232, 98, 10, 0.15);
+}
+
+.s3-years {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  color: var(--dark-lo);
+  margin-bottom: 5px;
+}
+
+.s3-gen {
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  font-weight: 100;
+  color: var(--dark-hi);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.s3-card.current .s3-gen {
+  color: var(--accent);
+}
+
+.s3-phrase {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--dark-mid);
+  line-height: 1.65;
+  margin-bottom: 16px;
+  max-width: 200px;
+  opacity: 0.85;
+}
+
+.s3-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.s3-stat-num {
+  font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+  font-weight: 200;
+  color: var(--dark-hi);
+  letter-spacing: -0.02em;
+}
+
+.s3-card.current .s3-stat-num {
+  color: var(--accent);
+}
+
+.s3-stat-unit {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--dark-lo);
+}
+
+.s3-badge {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.52rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 0.5px solid rgba(232, 98, 10, 0.35);
+  padding: 3px 10px;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 4 — ÉVOLUTION GRAPHIQUE
+═══════════════════════════════════════════════════════ */
+
+#s4 {
+  background: var(--light-bg);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 7vw 56px;
+  box-sizing: border-box;
+}
+
+.s4-header {
+  flex-shrink: 0;
+}
+
+.s4-eyebrow {
+  font-size: 0.58rem;
+  letter-spacing: 0.44em;
+  text-transform: uppercase;
+  color: var(--light-lo);
+  margin-bottom: 10px;
+}
+
+.s4-title {
+  font-size: clamp(2.4rem, 4vw, 4.5rem);
+  font-weight: 200;
+  color: var(--light-hi);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* ── Toggle + barres groupés en bas ── */
+.s4-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Toggle ── */
+.s4-toggle {
+  flex-shrink: 0;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--light-line);
+  margin-bottom: 32px;
+  width: fit-content;
+}
+
+.s4-btn {
+  font-family: var(--font);
+  font-size: 0.58rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--light-lo);
+  padding: 8px 28px 8px 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-bottom: 1.5px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s;
+}
+
+.s4-btn:hover { color: var(--light-mid); }
+
+.s4-btn.active {
+  color: var(--light-hi);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Barres ── */
+.s4-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 800px;
+}
+
+.s4-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+  transform: translateX(-8px);
+}
+
+.s4-label {
+  width: 130px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.s4-label-name {
+  font-size: 0.7rem;
+  color: var(--light-hi);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.s4-label-sub {
+  font-size: 0.58rem;
+  color: var(--light-lo);
+  letter-spacing: 0.06em;
+  margin-top: 1px;
+}
+
+.s4-track {
+  flex: 1;
+  height: 2px;
+  background: var(--light-line);
+  position: relative;
+  overflow: hidden;
+}
+
+.s4-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--light-ghost);
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.s4-row.highlight .s4-fill {
+  background: var(--accent);
+}
+
+.s4-value {
+  width: 64px;
+  flex-shrink: 0;
+  font-size: 1rem;
+  font-weight: 200;
+  color: var(--light-hi);
+  letter-spacing: -0.01em;
+}
+
+.s4-value-unit {
+  font-size: 0.58rem;
+  color: var(--light-lo);
+  margin-left: 3px;
+  letter-spacing: 0.08em;
+}
+
+.s4-row.highlight .s4-value {
+  color: var(--accent);
+}
