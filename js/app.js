@@ -113,30 +113,70 @@
      SECTION 3 — Timeline (construction DOM)
   ═══════════════════════════════════════════════════ */
 
-  // Phrase éditoriale par génération
-  const GEN_PHRASES = {
-    '996': 'La première. L\'audace d\'exister dans un monde qui attendait le GT3.',
-    '997': 'Trois variantes. Un sommet : le 4.0, moteur dérivé de la GT1.',
-    '991': 'PDK obligatoire. L\'aéro active arrive. L\'ère de la technologie.',
-    '992': 'DRS. Ailes actives. L\'aboutissement de vingt ans de radicalité.',
+  // Contenu structuré par génération
+  const GEN_CONTENT = {
+    '996': {
+      engine: '3.6 L · Boxer 6',
+      stats: [
+        { label: 'Exemplaires',       value: '682' },
+        { label: 'Poids',             value: '1 270 kg' },
+        { label: 'Régime max',        value: '7 400 tr/min' },
+        { label: 'Transmission',      value: 'Manuelle 6 rapports' },
+      ],
+      innovation: 'Première 911 GT3 RS homologuée route, la 996 pose les bases de la lignée. Elle inaugure les freins céramiques PCCB en option — une première Porsche — réduisant les masses non suspendues de 18 kg. Carrosserie élargie de 44 mm, suspension réglable en hauteur et boîte manuelle 6 rapports : le modèle fondateur.',
+    },
+    '997': {
+      engine: '3.6 → 3.8 → 4.0 L · Boxer 6',
+      stats: [
+        { label: 'Exemplaires',       value: '~3 268 (3 variantes)' },
+        { label: 'Poids',             value: '1 360 kg' },
+        { label: 'Régime max',        value: '8 250 tr/min (4.0)' },
+        { label: 'Transmission',      value: 'Manuelle 6 rapports' },
+      ],
+      innovation: 'La 997 introduit le PASM — première suspension adaptative de série sur une GT3 RS — et le contrôle de traction TC en standard. Elle évolue en trois variantes : 997.1 (415 ch), 997.2 (450 ch) et le mythique 4.0 (500 ch · 600 exemplaires). Ce dernier, dérivé de la 911 GT1 de course, reste à ce jour l\'un des moteurs atmosphériques les plus révérés de Porsche.',
+    },
+    '991': {
+      engine: '4.0 L · PDK 7 rapports',
+      stats: [
+        { label: 'Exemplaires',       value: '~9 270 (.1 + .2)' },
+        { label: 'Poids',             value: '1 420 kg' },
+        { label: 'Régime max',        value: '8 800 tr/min' },
+        { label: 'Transmission',      value: 'PDK 7 rapports' },
+      ],
+      innovation: 'La 991 marque un tournant : abandon de la boîte manuelle au profit du PDK 7 rapports, plus rapide à chaque rapport. Suspension active PASM Sport en série. La 991.2 (2018) franchit un cap avec l\'aileron arrière actif PDCC — une première sur GT3 RS — et atteint 520 ch. Le kit Weissach optionnel allège jusqu\'à 35 kg supplémentaires.',
+    },
+    '992': {
+      engine: '4.0 L · DRS actif',
+      stats: [
+        { label: 'Exemplaires',       value: '~5 000 (estimé)' },
+        { label: 'Poids',             value: '1 450 kg' },
+        { label: 'Régime max',        value: '8 500 tr/min' },
+        { label: 'Transmission',      value: 'PDK 7 rapports · DRS' },
+      ],
+      innovation: 'L\'aboutissement de vingt ans. La 992 emprunte à la 911 RSR de course sa double triangulation avant — une première sur une 911 de série. Son système PAA ajuste en continu les ailes avant et le becquet arrière. À 285 km/h : 860 kg d\'appui, soit 3 fois plus qu\'un GT3 standard. Le DRS réduit la traînée en ligne droite. Résultat : 6:49.328 au Nürburgring, record toutes catégories à sa sortie.',
+    },
   };
 
-  function buildS3Card(className, imgSrc, genLabel, yearRange, name, phrase, hp, badge) {
+  function buildS3Card(className, imgSrc, genLabel, yearRange, content) {
+    const statsHtml = (content.stats || []).map(s =>
+      `<div class="s3-stat">` +
+        `<span class="s3-stat-label">${s.label}</span>` +
+        `<span class="s3-stat-value">${s.value}</span>` +
+      `</div>`
+    ).join('');
     const card = document.createElement('div');
     card.className = 's3-card ' + className;
     card.innerHTML =
       `<div class="s3-card-img" style="background-image:url('${imgSrc}')"></div>` +
       `<div class="s3-card-inner">` +
-        `<div class="s3-card-top"><span class="s3-card-gen">${genLabel}</span></div>` +
-        `<div class="s3-card-bot">` +
+        `<div class="s3-card-top">` +
+          `<span class="s3-card-gen">${genLabel}</span>` +
           `<p class="s3-card-years">${yearRange}</p>` +
-          `<p class="s3-card-name">${name}</p>` +
-          (phrase ? `<p class="s3-card-phrase">${phrase}</p>` : '') +
-          `<div class="s3-card-stat">` +
-            `<span class="s3-card-num">${hp}</span>` +
-            `<span class="s3-card-unit"> ch</span>` +
-          `</div>` +
-          (badge ? `<div class="s3-card-badge">${badge}</div>` : '') +
+        `</div>` +
+        `<p class="s3-card-innovation">${content.innovation}</p>` +
+        `<div class="s3-card-bot">` +
+          `<p class="s3-card-engine">${content.engine}</p>` +
+          `<div class="s3-card-stats">${statsHtml}</div>` +
         `</div>` +
       `</div>`;
     return card;
@@ -147,62 +187,12 @@
     if (!grid || typeof GT3RS_GENERATIONS === 'undefined') return;
 
     GT3RS_GENERATIONS.forEach((gen) => {
-      const phrase = GEN_PHRASES[gen.gen] || '';
+      const content = GEN_CONTENT[gen.gen] || { engine: '', weight: '', facts: [] };
       const img = gen.image || '';
+      const yearRange = `${gen.years[0]} — ${gen.years[1] ? gen.years[1] : 'aujourd\'hui'}`;
 
-      if (gen.gen === '997') {
-        // Colonne 997 : deux cartes empilées
-        const col = document.createElement('div');
-        col.className = 's3-col';
-
-        // Carte du haut : 997.1 + 997.2 (regroupés)
-        const mainHp = Math.max(...gen.models.filter(m => m.variant !== '997 4.0').map(m => m.hp));
-        const topCard = buildS3Card(
-          's3-card--997',
-          img,
-          '997',
-          '2006 — 2011',
-          'GT3 RS · GT3 RS 3.8',
-          phrase,
-          mainHp,
-          null
-        );
-
-        // Carte du bas : 997 4.0 seul
-        const model40 = gen.models.find(m => m.variant === '997 4.0');
-        const botCard = buildS3Card(
-          's3-card--997b',
-          img,
-          '4.0',
-          '2011 — 2012',
-          'GT3 RS 4.0',
-          '',
-          model40 ? model40.hp : 500,
-          'Collector'
-        );
-
-        col.appendChild(topCard);
-        col.appendChild(botCard);
-        grid.appendChild(col);
-
-      } else {
-        const maxHp = Math.max(...gen.models.map(m => m.hp));
-        const badgeModel = [...gen.models].reverse().find(m => m.badge && m.badge !== 'Collector');
-        const yearRange = `${gen.years[0]} — ${gen.years[1] ? gen.years[1] : 'aujourd\'hui'}`;
-        const name = gen.gen === '992' ? 'GT3 RS' : 'GT3 RS';
-
-        const card = buildS3Card(
-          `s3-card--${gen.gen}`,
-          img,
-          gen.gen,
-          yearRange,
-          name,
-          phrase,
-          maxHp,
-          badgeModel ? badgeModel.badge : null
-        );
-        grid.appendChild(card);
-      }
+      const card = buildS3Card(`s3-card--${gen.gen}`, img, gen.gen, yearRange, content);
+      grid.appendChild(card);
     });
   }
 
@@ -239,16 +229,27 @@
   ═══════════════════════════════════════════════════ */
 
   const S4_METRICS = {
-    hp:     { key: 'hp',     unit: 'ch',    invert: false },
-    sprint: { key: 'sprint', unit: 's',     invert: true  },
-    vmax:   { key: 'vmax',   unit: 'km/h',  invert: false },
+    pwratio: { key: 'pwratio', unit: 'ch/t', invert: false },
+    rpm:    { key: 'rpm',    unit: 'tr/min',    invert: false },
+    nring:  { key: 'nring',  unit: '',          invert: true  },
   };
 
-  let s4CurrentMetric = 'hp';
+  function secsToLap(s) {
+    const m = Math.floor(s / 60);
+    const rem = s - m * 60;
+    return m + ':' + (rem < 10 ? '0' : '') + rem.toFixed(0).padStart(2, '0');
+  }
+
+  let s4CurrentMetric = 'pwratio';
 
   function calcPct(val, minVal, maxVal, invert) {
     if (invert) return ((maxVal - val) / (maxVal - minVal || 1)) * 78 + 14;
     return ((val - minVal) / (maxVal - minVal || 1)) * 78 + 14;
+  }
+
+  function getVal(model, m) {
+    if (m.key === 'pwratio') return Math.round(model.hp / (model.weight / 1000));
+    return model[m.key];
   }
 
   function renderS4Bars(metric) {
@@ -256,7 +257,7 @@
     if (!container || typeof GT3RS_GENERATIONS === 'undefined') return;
 
     const m = S4_METRICS[metric];
-    const allVals = GT3RS_MODELS.map((x) => x[m.key]);
+    const allVals = GT3RS_MODELS.map((x) => getVal(x, m));
     const maxVal = Math.max(...allVals);
     const minVal = Math.min(...allVals);
 
@@ -300,9 +301,10 @@
             const fill = row.querySelector('.s4-fill');
             fill.style.transition = 'width 0.55s cubic-bezier(0.4, 0, 0.2, 1)';
             fill.style.transitionDelay = (i * 0.04) + 's';
-            const pct = calcPct(model[m.key], minVal, maxVal, m.invert);
+            const val = getVal(model, m);
+            const pct = calcPct(val, minVal, maxVal, m.invert);
             fill.style.width = pct.toFixed(1) + '%';
-            const displayVal = m.key === 'sprint' ? model[m.key].toFixed(1) : model[m.key];
+            const displayVal = m.key === 'nring' ? secsToLap(val) : val;
             row.querySelector('.s4-row-bar .s4-value').innerHTML =
               `${displayVal}<span class="s4-value-unit">${m.unit}</span>`;
           });
@@ -320,9 +322,10 @@
         if (!row) return;
         const fill = row.querySelector('.s4-fill');
         fill.style.transitionDelay = (i * 0.04) + 's';
-        const pct = calcPct(model[m.key], minVal, maxVal, m.invert);
+        const val = getVal(model, m);
+        const pct = calcPct(val, minVal, maxVal, m.invert);
         fill.style.width = pct.toFixed(1) + '%';
-        const displayVal = m.key === 'sprint' ? model[m.key].toFixed(1) : model[m.key];
+        const displayVal = m.key === 'nring' ? secsToLap(val) : val;
         row.querySelector('.s4-row-bar .s4-value').innerHTML =
           `${displayVal}<span class="s4-value-unit">${m.unit}</span>`;
       });
@@ -389,7 +392,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     renderSection2();
     renderSection3();
-    renderS4Bars('hp');
+    renderS4Bars('pwratio');
     initS4Toggle();
 
     // ScrollTrigger disponible via le CDN (chargé dans index.html)
