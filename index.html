@@ -97,13 +97,8 @@
     <h2 class="s3-title">Vingt ans.<br>Une trajectoire.</h2>
   </div>
 
-  <div class="s3-rail">
-    <div class="s3-line-bg"></div>
-    <div class="s3-line-fill" id="s3-line-fill"></div>
-    <div class="s3-cards" id="s3-cards">
-      <!-- Injecté par app.js depuis GT3RS_GENERATIONS -->
-    </div>
-  </div>
+  <!-- Grille asymétrique injectée par app.js -->
+  <div class="s3-grid" id="s3-grid"></div>
 
 </section>
 
@@ -113,21 +108,21 @@
 ══════════════════════════════════════════════════════ -->
 <section id="s4">
 
-  <div class="s4-header">
-    <p class="s4-eyebrow">04 / Évolution</p>
-    <h2 class="s4-title">Les chiffres<br>racontent l'histoire.</h2>
-  </div>
-
-  <div class="s4-bottom">
+  <!-- Titre + toggle empilés à gauche -->
+  <div class="s4-top">
+    <div class="s4-header">
+      <p class="s4-eyebrow">04 / Évolution</p>
+      <h2 class="s4-title">Les chiffres<br>racontent l'histoire.</h2>
+    </div>
     <div class="s4-toggle" id="s4-toggle">
       <button class="s4-btn active" data-metric="hp">Puissance</button>
       <button class="s4-btn" data-metric="sprint">0 – 100</button>
       <button class="s4-btn" data-metric="vmax">Vmax</button>
     </div>
-    <div class="s4-bars" id="s4-bars">
-      <!-- Injecté par app.js -->
-    </div>
   </div>
+
+  <!-- Barres groupées par génération — injectées par app.js -->
+  <div class="s4-bars" id="s4-bars"></div>
 
 </section>
 

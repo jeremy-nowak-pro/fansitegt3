@@ -121,38 +121,88 @@
     '992': 'DRS. Ailes actives. L\'aboutissement de vingt ans de radicalité.',
   };
 
+  function buildS3Card(className, imgSrc, genLabel, yearRange, name, phrase, hp, badge) {
+    const card = document.createElement('div');
+    card.className = 's3-card ' + className;
+    card.innerHTML =
+      `<div class="s3-card-img" style="background-image:url('${imgSrc}')"></div>` +
+      `<div class="s3-card-inner">` +
+        `<div class="s3-card-top"><span class="s3-card-gen">${genLabel}</span></div>` +
+        `<div class="s3-card-bot">` +
+          `<p class="s3-card-years">${yearRange}</p>` +
+          `<p class="s3-card-name">${name}</p>` +
+          (phrase ? `<p class="s3-card-phrase">${phrase}</p>` : '') +
+          `<div class="s3-card-stat">` +
+            `<span class="s3-card-num">${hp}</span>` +
+            `<span class="s3-card-unit"> ch</span>` +
+          `</div>` +
+          (badge ? `<div class="s3-card-badge">${badge}</div>` : '') +
+        `</div>` +
+      `</div>`;
+    return card;
+  }
+
   function renderSection3() {
-    const container = document.getElementById('s3-cards');
-    if (!container || typeof GT3RS_GENERATIONS === 'undefined') return;
+    const grid = document.getElementById('s3-grid');
+    if (!grid || typeof GT3RS_GENERATIONS === 'undefined') return;
 
     GT3RS_GENERATIONS.forEach((gen) => {
-      const card = document.createElement('div');
-      card.className = 's3-card' + (gen.current ? ' current' : '');
-
-      // Stat principale : ch max de la génération
-      const maxHp = Math.max(...gen.models.map((m) => m.hp));
-
-      // Badge : prendre le badge du dernier modèle notable
-      const badgeModel = [...gen.models].reverse().find((m) => m.badge);
-      const badgeHtml = badgeModel
-        ? `<div class="s3-badge">${badgeModel.badge}</div>`
-        : '';
-
-      const yearRange = `${gen.years[0]} — ${gen.years[1] ?? 'aujourd\'hui'}`;
       const phrase = GEN_PHRASES[gen.gen] || '';
+      const img = gen.image || '';
 
-      card.innerHTML =
-        `<div class="s3-dot"></div>` +
-        `<p class="s3-years">${yearRange}</p>` +
-        `<p class="s3-gen">${gen.gen}</p>` +
-        `<p class="s3-phrase">${phrase}</p>` +
-        `<div class="s3-stat">` +
-          `<span class="s3-stat-num">${maxHp}</span>` +
-          `<span class="s3-stat-unit">ch</span>` +
-        `</div>` +
-        badgeHtml;
+      if (gen.gen === '997') {
+        // Colonne 997 : deux cartes empilées
+        const col = document.createElement('div');
+        col.className = 's3-col';
 
-      container.appendChild(card);
+        // Carte du haut : 997.1 + 997.2 (regroupés)
+        const mainHp = Math.max(...gen.models.filter(m => m.variant !== '997 4.0').map(m => m.hp));
+        const topCard = buildS3Card(
+          's3-card--997',
+          img,
+          '997',
+          '2006 — 2011',
+          'GT3 RS · GT3 RS 3.8',
+          phrase,
+          mainHp,
+          null
+        );
+
+        // Carte du bas : 997 4.0 seul
+        const model40 = gen.models.find(m => m.variant === '997 4.0');
+        const botCard = buildS3Card(
+          's3-card--997b',
+          img,
+          '4.0',
+          '2011 — 2012',
+          'GT3 RS 4.0',
+          '',
+          model40 ? model40.hp : 500,
+          'Collector'
+        );
+
+        col.appendChild(topCard);
+        col.appendChild(botCard);
+        grid.appendChild(col);
+
+      } else {
+        const maxHp = Math.max(...gen.models.map(m => m.hp));
+        const badgeModel = [...gen.models].reverse().find(m => m.badge && m.badge !== 'Collector');
+        const yearRange = `${gen.years[0]} — ${gen.years[1] ? gen.years[1] : 'aujourd\'hui'}`;
+        const name = gen.gen === '992' ? 'GT3 RS' : 'GT3 RS';
+
+        const card = buildS3Card(
+          `s3-card--${gen.gen}`,
+          img,
+          gen.gen,
+          yearRange,
+          name,
+          phrase,
+          maxHp,
+          badgeModel ? badgeModel.badge : null
+        );
+        grid.appendChild(card);
+      }
     });
   }
 
@@ -170,24 +220,15 @@
       scrollTrigger: { trigger: '#s3', start: 'top 75%' },
     });
 
-    // Ligne orange
-    ScrollTrigger.create({
-      trigger: '#s3',
-      start: 'top 60%',
-      onEnter: () => {
-        document.getElementById('s3-line-fill').style.width = '100%';
-      },
-    });
-
-    // Cards en cascade
+    // Cartes en cascade au scroll
     gsap.utils.toArray('.s3-card').forEach((card, i) => {
       gsap.to(card, {
         opacity: 1,
         y: 0,
-        duration: 0.5,
+        duration: 0.55,
         ease: 'power2.out',
-        delay: i * 0.1,
-        scrollTrigger: { trigger: '#s3', start: 'top 60%' },
+        delay: i * 0.08,
+        scrollTrigger: { trigger: '#s3', start: 'top 65%' },
       });
     });
   }
@@ -205,51 +246,87 @@
 
   let s4CurrentMetric = 'hp';
 
+  function calcPct(val, minVal, maxVal, invert) {
+    if (invert) return ((maxVal - val) / (maxVal - minVal || 1)) * 78 + 14;
+    return ((val - minVal) / (maxVal - minVal || 1)) * 78 + 14;
+  }
+
   function renderS4Bars(metric) {
     const container = document.getElementById('s4-bars');
-    if (!container || typeof GT3RS_MODELS === 'undefined') return;
+    if (!container || typeof GT3RS_GENERATIONS === 'undefined') return;
 
     const m = S4_METRICS[metric];
-    const vals = GT3RS_MODELS.map((x) => x[m.key]);
-    const maxVal = Math.max(...vals);
-    const minVal = Math.min(...vals);
+    const allVals = GT3RS_MODELS.map((x) => x[m.key]);
+    const maxVal = Math.max(...allVals);
+    const minVal = Math.min(...allVals);
 
-    // Vider et reconstruire (première fois) ou juste mettre à jour les barres
     const isFirstRender = container.children.length === 0;
 
-    GT3RS_MODELS.forEach((model, i) => {
-      const val = model[m.key];
-      const pct = m.invert
-        ? ((maxVal - val) / (maxVal - minVal || 1)) * 88 + 8
-        : (val / maxVal) * 88 + 8;
+    if (isFirstRender) {
+      // Construction des lignes (sans séparateurs)
+      GT3RS_GENERATIONS.forEach((gen) => {
+        gen.models.forEach((model) => {
+          const shortName = (model.name || '').replace('911 ', '');
+          const row = document.createElement('div');
+          row.className = 's4-row' + (gen.current ? ' highlight' : '');
+          row.innerHTML =
+            `<div class="s4-label">` +
+              `<span class="s4-label-name">${shortName}</span>` +
+              `<span class="s4-label-sub">${model.variant} · ${model.years[0]}</span>` +
+            `</div>` +
+            `<div class="s4-row-bar">` +
+              `<div class="s4-track"><div class="s4-fill" style="width:0%"></div></div>` +
+              `<div class="s4-value"><span class="s4-value-unit"></span></div>` +
+            `</div>`;
+          container.appendChild(row);
+        });
+      });
 
-      const isCurrent = model.variant === '992';
-      const variantLabel = model.variant;
-      const shortName = (model.name || '').replace('911 ', '');
-      const displayVal = m.key === 'sprint' ? val.toFixed(1) : val;
+    } else {
+      // Collapse toutes les barres à 0 instantanément
+      container.querySelectorAll('.s4-fill').forEach((f) => {
+        f.style.transition = 'none';
+        f.style.width = '0%';
+      });
 
-      if (isFirstRender) {
-        const row = document.createElement('div');
-        row.className = 's4-row' + (isCurrent ? ' highlight' : '');
-        row.dataset.index = i;
-        row.innerHTML =
-          `<div class="s4-label">` +
-            `<div class="s4-label-name">${shortName}</div>` +
-            `<div class="s4-label-sub">${variantLabel} · ${model.years[0]}</div>` +
-          `</div>` +
-          `<div class="s4-track">` +
-            `<div class="s4-fill" style="width:0%" data-pct="${pct.toFixed(1)}"></div>` +
-          `</div>` +
-          `<div class="s4-value">${displayVal}<span class="s4-value-unit">${m.unit}</span></div>`;
-        container.appendChild(row);
-      } else {
-        const row = container.children[i];
+      // Puis re-expand avec stagger après un tick
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const rows = container.querySelectorAll('.s4-row');
+          let i = 0;
+          GT3RS_MODELS.forEach((model) => {
+            const row = rows[i++];
+            if (!row) return;
+            const fill = row.querySelector('.s4-fill');
+            fill.style.transition = 'width 0.55s cubic-bezier(0.4, 0, 0.2, 1)';
+            fill.style.transitionDelay = (i * 0.04) + 's';
+            const pct = calcPct(model[m.key], minVal, maxVal, m.invert);
+            fill.style.width = pct.toFixed(1) + '%';
+            const displayVal = m.key === 'sprint' ? model[m.key].toFixed(1) : model[m.key];
+            row.querySelector('.s4-row-bar .s4-value').innerHTML =
+              `${displayVal}<span class="s4-value-unit">${m.unit}</span>`;
+          });
+        });
+      });
+      return; // les valeurs sont mises à jour dans le rAF
+    }
+
+    // Première animation (depuis 0 → valeurs) au chargement
+    setTimeout(() => {
+      const rows = container.querySelectorAll('.s4-row');
+      let i = 0;
+      GT3RS_MODELS.forEach((model) => {
+        const row = rows[i++];
+        if (!row) return;
         const fill = row.querySelector('.s4-fill');
-        const valEl = row.querySelector('.s4-value');
+        fill.style.transitionDelay = (i * 0.04) + 's';
+        const pct = calcPct(model[m.key], minVal, maxVal, m.invert);
         fill.style.width = pct.toFixed(1) + '%';
-        valEl.innerHTML = `${displayVal}<span class="s4-value-unit">${m.unit}</span>`;
-      }
-    });
+        const displayVal = m.key === 'sprint' ? model[m.key].toFixed(1) : model[m.key];
+        row.querySelector('.s4-row-bar .s4-value').innerHTML =
+          `${displayVal}<span class="s4-value-unit">${m.unit}</span>`;
+      });
+    }, 100);
   }
 
   function animateSection4() {

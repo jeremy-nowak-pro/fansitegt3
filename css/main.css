@@ -492,14 +492,14 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 48px 7vw 56px;
+  padding: 48px 7vw 0;
   box-sizing: border-box;
   border-bottom: 1px solid var(--black);
 }
 
 .s3-header {
   flex-shrink: 0;
+  margin-bottom: 32px;
 }
 
 .s3-eyebrow {
@@ -521,123 +521,156 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   transform: translateY(20px);
 }
 
-/* ── Rail ── */
-.s3-rail {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.s3-line-bg {
-  position: absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
-  height: 0.5px;
-  background: var(--dark-line);
-}
-
-.s3-line-fill {
-  position: absolute;
-  top: 10px;
-  left: 0;
-  width: 0%;
-  height: 0.5px;
-  background: var(--accent);
-  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ── Cards ── */
-.s3-cards {
+/* ── Grille asymétrique ── */
+.s3-grid {
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  position: relative;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 2px;
 }
 
+/* Colonne 997 : deux cartes empilées */
+.s3-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+}
+
+.s3-col .s3-card { flex: 1; }
+
+/* ── Carte ── */
 .s3-card {
-  padding-top: 28px;
+  position: relative;
+  overflow: hidden;
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(12px);
 }
 
-.s3-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--black);
-  border: 0.5px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 18px;
-  transition: background 0.3s, border-color 0.3s;
+.s3-card-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: #111;
+  transition: transform 0.6s ease;
 }
 
-.s3-card.current .s3-dot {
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: 0 0 0 5px rgba(232, 98, 10, 0.15);
+.s3-card:hover .s3-card-img {
+  transform: scale(1.03);
 }
 
-.s3-years {
-  font-size: 0.58rem;
+/* Dégradé pour lisibilité texte */
+.s3-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.25) 45%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+  z-index: 1;
+}
+
+.s3-card-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 22px;
+}
+
+/* Numéro génération — grand et décoratif */
+.s3-card-gen {
+  font-size: clamp(2.5rem, 4vw, 5rem);
+  font-weight: 100;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.12);
+}
+
+.s3-card--992 .s3-card-gen {
+  color: rgba(232, 98, 10, 0.3);
+}
+
+/* Petite carte 997 — gen plus petite */
+.s3-card--997b .s3-card-gen {
+  font-size: clamp(1.5rem, 2.5vw, 2.8rem);
+}
+
+/* Infos bas de carte */
+.s3-card-bot { }
+
+.s3-card-years {
+  font-size: 0.55rem;
   letter-spacing: 0.18em;
   color: var(--dark-lo);
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
-.s3-gen {
-  font-size: clamp(2rem, 3.5vw, 3.5rem);
-  font-weight: 100;
-  color: var(--dark-hi);
-  letter-spacing: -0.025em;
-  line-height: 1;
-  margin-bottom: 12px;
-}
-
-.s3-card.current .s3-gen {
-  color: var(--accent);
-}
-
-.s3-phrase {
-  font-size: 0.7rem;
+.s3-card-name {
+  font-size: 0.72rem;
   letter-spacing: 0.04em;
-  color: var(--dark-mid);
-  line-height: 1.65;
-  margin-bottom: 16px;
-  max-width: 200px;
-  opacity: 0.85;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 6px;
 }
 
-.s3-stat {
+.s3-card-phrase {
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+  color: var(--dark-mid);
+  line-height: 1.6;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.s3-card-stat {
   display: flex;
   align-items: baseline;
   gap: 5px;
 }
 
-.s3-stat-num {
-  font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+.s3-card-num {
+  font-size: clamp(1.4rem, 2.2vw, 2.4rem);
   font-weight: 200;
   color: var(--dark-hi);
   letter-spacing: -0.02em;
 }
 
-.s3-card.current .s3-stat-num {
-  color: var(--accent);
-}
+.s3-card--992 .s3-card-num { color: var(--accent); }
 
-.s3-stat-unit {
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
+.s3-card-unit {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
   color: var(--dark-lo);
 }
 
-.s3-badge {
+.s3-card-badge {
   display: inline-block;
   margin-top: 8px;
-  font-size: 0.52rem;
-  letter-spacing: 0.28em;
+  font-size: 0.5rem;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--accent);
-  border: 0.5px solid rgba(232, 98, 10, 0.35);
-  padding: 3px 10px;
+  color: rgba(232, 98, 10, 0.9);
+  border: 0.5px solid rgba(232, 98, 10, 0.4);
+  padding: 3px 9px;
+}
+
+/* Ligne orange en bas de la carte 992 */
+.s3-card--992::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 3;
 }
 
 
@@ -654,6 +687,14 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   justify-content: space-between;
   padding: 48px 7vw 56px;
   box-sizing: border-box;
+}
+
+/* ── Titre + toggle empilés ── */
+.s4-top {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .s4-header {
@@ -678,85 +719,111 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   transform: translateY(20px);
 }
 
-/* ── Toggle + barres groupés en bas ── */
-.s4-bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
 /* ── Toggle ── */
 .s4-toggle {
   flex-shrink: 0;
   display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--light-line);
-  margin-bottom: 32px;
-  width: fit-content;
+  gap: 8px;
 }
 
 .s4-btn {
   font-family: var(--font);
-  font-size: 0.58rem;
-  letter-spacing: 0.32em;
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--light-lo);
-  padding: 8px 28px 8px 0;
+  color: var(--light-mid);
+  padding: 10px 22px;
   cursor: pointer;
   background: none;
-  border: none;
-  border-bottom: 1.5px solid transparent;
-  margin-bottom: -1px;
-  transition: color 0.2s;
+  border: 0.5px solid var(--light-line);
+  border-radius: 0;
+  transition: color 0.18s, border-color 0.18s;
 }
 
-.s4-btn:hover { color: var(--light-mid); }
+.s4-btn:hover {
+  color: var(--light-hi);
+  border-color: var(--light-ghost);
+}
 
 .s4-btn.active {
   color: var(--light-hi);
-  border-bottom-color: var(--accent);
+  border-color: var(--light-hi);
 }
 
 /* ── Barres ── */
 .s4-bars {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 32px;
+}
+
+/* ── Séparateur génération ── */
+.s4-gen-sep {
+  display: flex;
+  align-items: center;
   gap: 14px;
-  max-width: 800px;
+  margin-bottom: 12px;
+  margin-top: 20px;
+}
+
+.s4-gen-sep:first-child {
+  margin-top: 0;
+}
+
+.s4-gen-num {
+  font-size: 0.55rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--light-ghost);
+  flex-shrink: 0;
+}
+
+.s4-gen-line {
+  flex: 1;
+  height: 0.5px;
+  background: var(--light-line);
 }
 
 .s4-row {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  flex-direction: column;
+  gap: 6px;
   opacity: 0;
   transform: translateX(-8px);
 }
 
 .s4-label {
-  width: 130px;
-  flex-shrink: 0;
-  text-align: right;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 
 .s4-label-name {
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   color: var(--light-hi);
   letter-spacing: 0.02em;
-  line-height: 1.2;
 }
 
 .s4-label-sub {
-  font-size: 0.58rem;
+  font-size: 0.6rem;
   color: var(--light-lo);
   letter-spacing: 0.06em;
-  margin-top: 1px;
+}
+
+.s4-row-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .s4-track {
   flex: 1;
-  height: 2px;
-  background: var(--light-line);
+  height: 6px;
+  background: rgba(0, 0, 0, 0.07);
   position: relative;
   overflow: hidden;
 }
@@ -764,30 +831,24 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 .s4-fill {
   height: 100%;
   width: 0%;
-  background: var(--light-ghost);
-  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.s4-row.highlight .s4-fill {
   background: var(--accent);
+  transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .s4-value {
-  width: 64px;
+  width: 80px;
   flex-shrink: 0;
-  font-size: 1rem;
+  font-size: 1.4rem;
   font-weight: 200;
   color: var(--light-hi);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
 .s4-value-unit {
-  font-size: 0.58rem;
+  font-size: 0.6rem;
   color: var(--light-lo);
-  margin-left: 3px;
+  margin-left: 4px;
   letter-spacing: 0.08em;
 }
 
-.s4-row.highlight .s4-value {
-  color: var(--accent);
-}
