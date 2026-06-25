@@ -20,10 +20,10 @@
   --dark-line: rgba(255,255,255,0.10);  /* séparateurs discrets */
 
   /* ── Surface claire (section 2+) ── */
-  --light-hi:    #111111;  /* noms modèles, stats — principal */
-  --light-mid:   #5a5a5a;  /* années — secondaire lisible */
-  --light-lo:    #a8a49e;  /* moteur — détail technique */
-  --light-ghost: #c8c4bc;  /* 996, 997… — décoratif structurel */
+  --light-hi:    #3a3a3a;  /* noms modèles, stats — principal */
+  --light-mid:   #7a7a7a;  /* années — secondaire lisible */
+  --light-lo:    #b0aca6;  /* moteur — détail technique */
+  --light-ghost: #d0ccc4;  /* 996, 997… — décoratif structurel */
   --light-line:  #d4d0c8;  /* traits séparateurs */
   --light-bg:    #f5f3f0;  /* fond section 2 */
 }
@@ -93,7 +93,6 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   left: 7vw;
   transform: translateY(-50%);
   z-index: 10;
-  max-width: 600px;
 }
 
 .hero-overline {
@@ -108,7 +107,7 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 }
 
 .hero-title {
-  font-size: clamp(4rem, 10vw, 10rem);
+  font-size: clamp(3.5rem, 8vw, 8rem);
   font-weight: 200;
   letter-spacing: -0.02em;
   line-height: 0.92;
@@ -127,6 +126,7 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   margin-bottom: 6px;
 }
 
+
 .hero-sub {
   font-size: 0.82rem;
   letter-spacing: 0.15em;
@@ -134,7 +134,7 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   font-weight: 300;
   opacity: 0;
   transform: translateY(12px);
-  max-width: 320px;
+  max-width: 28vw;
   line-height: 1.7;
 }
 
@@ -202,7 +202,7 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   letter-spacing: 0.38em;
   text-transform: uppercase;
   color: var(--dark-lo);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .hero-meta-value {
@@ -239,8 +239,13 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 .hero-stats {
   display: flex;
   gap: 0;
-  justify-content: flex-end;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-stat {
+  width: 150px;
+  text-align: center;
 }
 
 .hero-stat + .hero-stat {
@@ -282,7 +287,7 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 40px 0 0;
+  padding: 48px 0;
   box-sizing: border-box;
 }
 
@@ -318,10 +323,10 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 }
 
 .cars-table-head span {
-  font-size: 0.5rem;
-  letter-spacing: 0.34em;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--light-ghost);
+  color: var(--light-mid);
 }
 
 .cars-table-head span:nth-child(n+2) { text-align: right; }
@@ -352,15 +357,39 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 16px 7vw 6px;
+  padding: 16px 7vw 6px calc(7vw + 14px);
+  position: relative;
+}
+
+.gen-header::before {
+  content: '';
+  position: absolute;
+  left: 7vw;
+  top: 12px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--light-line);
+  border-radius: 2px;
+}
+
+.gen-current .gen-header::before {
+  background: var(--accent);
+  width: 3px;
+  top: 8px;
+  bottom: 0px;
+  box-shadow: 0 0 8px rgba(232, 98, 10, 0.4);
 }
 
 .gen-label {
   font-size: clamp(1.44rem, 2.08vw, 2.4rem);
   font-weight: 100;
   letter-spacing: -0.03em;
-  color: var(--accent);
+  color: var(--light-hi);
   line-height: 1;
+}
+
+.gen-current .gen-label {
+  color: var(--accent);
 }
 
 .gen-range {
@@ -408,7 +437,7 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 }
 
 .car-variant-title {
-  font-size: clamp(0.75rem, 0.95vw, 0.88rem);
+  font-size: clamp(0.88rem, 1.1vw, 1rem);
   font-weight: 500;
   color: var(--light-hi);
   letter-spacing: 0.01em;
@@ -416,14 +445,14 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 }
 
 .car-year-tag {
-  font-size: 0.58rem;
+  font-size: 0.72rem;
   color: var(--light-mid);
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
 
 .car-engine {
-  font-size: 0.56rem;
+  font-size: 0.7rem;
   color: var(--light-lo);
   letter-spacing: 0.04em;
   white-space: nowrap;
@@ -443,7 +472,7 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 .car-stat-num {
   font-size: clamp(0.95rem, 1.3vw, 1.4rem);
   font-weight: 200;
-  color: var(--light-hi);
+  color: var(--light-mid);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -457,7 +486,7 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 
 .section-placeholder {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   background: var(--white);
   display: flex;
   align-items: center;
@@ -492,9 +521,8 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 48px 7vw 0;
+  padding: 48px 7vw;
   box-sizing: border-box;
-  border-bottom: 1px solid var(--black);
 }
 
 .s3-header {
@@ -525,9 +553,11 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 .s3-grid {
   flex: 1;
   min-height: 0;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-  gap: 2px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding-bottom: 0;
 }
 
 /* Colonne 997 : deux cartes empilées */
@@ -581,7 +611,6 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 22px;
 }
 
@@ -595,7 +624,7 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
 }
 
 .s3-card--992 .s3-card-gen {
-  color: rgba(232, 98, 10, 0.3);
+  color: var(--accent);
 }
 
 /* Petite carte 997 — gen plus petite */
@@ -603,14 +632,80 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   font-size: clamp(1.5rem, 2.5vw, 2.8rem);
 }
 
+/* Carte image seule — garde le même dégradé que les autres */
+
+/* Panoramique — chaque carte montre 25% de son image (gauche → droite) */
+.s3-card--996 .s3-card-img,
+.s3-card--997 .s3-card-img,
+.s3-card--991 .s3-card-img,
+.s3-card--992 .s3-card-img {
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
 /* Infos bas de carte */
-.s3-card-bot { }
+.s3-card-bot { display: flex; flex-direction: column; gap: 0; }
+
+.s3-card-engine {
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dark-mid);
+  margin-bottom: 10px;
+}
+
+.s3-card-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 12px;
+}
+
+.s3-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.07);
+}
+
+.s3-stat-label {
+  font-size: 0.48rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dark-lo);
+}
+
+.s3-stat-value {
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--dark-hi);
+  text-align: right;
+}
+
+.s3-card--992 .s3-stat-value { color: var(--dark-hi); }
+
+.s3-card-innovation {
+  flex: 1;
+  font-size: 0.58rem;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.75;
+  padding: 18px 0 14px;
+}
 
 .s3-card-years {
-  font-size: 0.55rem;
+  font-size: 0.66rem;
   letter-spacing: 0.18em;
   color: var(--dark-lo);
-  margin-bottom: 4px;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+.s3-card-top {
+  display: flex;
+  flex-direction: column;
 }
 
 .s3-card-name {
@@ -661,17 +756,6 @@ body { background: var(--black); font-family: var(--font); color: var(--white); 
   padding: 3px 9px;
 }
 
-/* Ligne orange en bas de la carte 992 */
-.s3-card--992::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent);
-  z-index: 3;
-}
 
 
 /* ═══════════════════════════════════════════════════════
