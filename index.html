@@ -27,8 +27,12 @@
     <p class="hero-sub">
       Ce que vous voyez est l'aboutissement.
       Vingt ans de radicalité, distillés dans une seule machine.<br>
+      À chaque génération, Porsche a refusé de s'en tenir là.<br>
+      Plus de puissance, plus d'appui, des technologies venues directement de la compétition.<br>
+      Une voiture de route qui a fini par faire ce que seules les voitures de course savaient faire.<br>
       Ce qui suit, c'est comment on y est arrivé.
     </p>
+
   </div>
 
 
@@ -53,6 +57,13 @@
       </div>
     </div>
   </div>
+
+  <div class="hero-chevron" id="hero-chevron">
+    <svg viewBox="0 0 28 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="1,1 14,7 27,1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
 </section>
 
 
@@ -125,11 +136,55 @@
 
 
 <!-- ══════════════════════════════════════════════════════
-     SECTION 5 — GT3 RS 992 · 3D + Hotspots (placeholder)
+     SECTION 5 — Vidéo circuit + Crédits
 ══════════════════════════════════════════════════════ -->
-<section id="s5" class="section-placeholder" style="background:#f0efec;">
-  <h2>Section 05</h2>
-  <p>GT3 RS 992 · Modèle 3D + Hotspots</p>
+<section id="s5">
+
+  <!-- YouTube background — autoplay, muted, loop, no controls -->
+  <div class="s5-video-wrap">
+    <iframe
+      id="s5-yt"
+      src="https://www.youtube.com/embed/9j3mEUh7QV4?autoplay=1&mute=1&loop=1&controls=0&rel=0&iv_load_policy=3&modestbranding=1&playlist=9j3mEUh7QV4&enablejsapi=1"
+      title="Porsche GT3 RS sur circuit"
+      allow="autoplay; encrypted-media"
+      frameborder="0">
+    </iframe>
+  </div>
+
+  <!-- Contrôle audio haut-droite -->
+  <div class="s5-audio-ctrl" id="s5-audio-ctrl">
+    <button class="s5-mute-btn" id="s5-mute-btn" aria-label="Activer le son">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      </svg>
+    </button>
+    <input type="range" class="s5-vol-slider" id="s5-vol-slider" min="0" max="100" value="50" aria-label="Volume">
+  </div>
+
+  <div class="s5-overlay"></div>
+  <!-- Masques pour cacher les éléments YouTube (titre, logo) -->
+  <div class="s5-mask-top"></div>
+  <div class="s5-mask-bottom"></div>
+
+  <!-- Ligne du bas : auteurs à gauche, crédit vidéo à droite, au même niveau -->
+  <div class="s5-bottom-row">
+    <div class="s5-content">
+      <p class="s5-eyebrow">Site réalisé par</p>
+      <h2 class="s5-title">Jeremy Novak<br>&amp; Guangquan Ye</h2>
+    </div>
+    <div class="s5-credits">
+      <span class="s5-credits-label">Vidéo de <a href="https://www.youtube.com/watch?v=9j3mEUh7QV4" target="_blank" rel="noopener" class="s5-credits-link">LR Media</a></span>
+    </div>
+  </div>
+
+  <!-- Portfolios centrés tout en bas -->
+  <div class="s5-portfolios">
+    <a href="https://portfolio-gye.vercel.app/" target="_blank" rel="noopener" class="s5-portfolio-link">Ye Guangquan</a>
+    <a href="#" class="s5-portfolio-link s5-portfolio-placeholder">Jeremy Novak</a>
+  </div>
+
 </section>
 
 
@@ -142,6 +197,47 @@
        4. hero.js  — Three.js scene
        5. app.js   — GSAP + DOM
 ══════════════════════════════════════════════════════ -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  window.onYouTubeIframeAPIReady = function () {
+    const player = new YT.Player('s5-yt');
+    const ctrl   = document.getElementById('s5-audio-ctrl');
+    const btn    = document.getElementById('s5-mute-btn');
+    const slider = document.getElementById('s5-vol-slider');
+    let muted = true;
+
+    btn.addEventListener('click', function () {
+      if (muted) {
+        player.unMute();
+        player.setVolume(parseInt(slider.value));
+        muted = false;
+        btn.classList.add('unmuted');
+        ctrl.classList.add('has-sound');
+      } else {
+        player.mute();
+        muted = true;
+        btn.classList.remove('unmuted');
+        ctrl.classList.remove('has-sound');
+      }
+    });
+
+    slider.addEventListener('input', function () {
+      const vol = parseInt(this.value);
+      player.setVolume(vol);
+      if (vol === 0) {
+        player.mute();
+        muted = true;
+        btn.classList.remove('unmuted');
+        ctrl.classList.remove('has-sound');
+      } else if (muted) {
+        player.unMute();
+        muted = false;
+        btn.classList.add('unmuted');
+        ctrl.classList.add('has-sound');
+      }
+    });
+  };
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
