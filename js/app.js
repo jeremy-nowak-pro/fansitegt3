@@ -16,8 +16,7 @@
       .to('.hero-title',     { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, '-=0.1')
       .to('.hero-sub',       { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' }, '-=0.1')
       .to(['.hero-meta', '.hero-model-tag', '.hero-engine-tag'], { opacity: 1, duration: 0.25, ease: 'power2.out' }, '-=0.05')
-      .to('.scroll-cta',     { opacity: 1, duration: 0.2, ease: 'power2.out' }, '-=0.1')
-      .to('#scroll-line',    { scaleX: 1, duration: 0.3, ease: 'power2.inOut' }, '-=0.15');
+      .to('#hero-chevron',   { opacity: 1, duration: 0.4, ease: 'power2.out' }, '+=0.2');
   }
 
   window.addEventListener('hero:car-loaded', animateHeroText, { once: true });
