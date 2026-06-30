@@ -4,7 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Porsche GT3 RS — L'évolution d'une légende</title>
-<link rel="stylesheet" href="./css/main.css">
+  <meta name="description" content="Vingt ans de radicalité distillés dans une seule machine. L'histoire complète de la Porsche 911 GT3 RS, de la 996 à la 992.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Porsche GT3 RS — L'évolution d'une légende">
+  <meta property="og:description" content="Vingt ans de radicalité distillés dans une seule machine. L'histoire complète de la Porsche 911 GT3 RS, de la 996 à la 992.">
+  <meta property="og:image" content="/assets/images/Porsche-911-GT3-RS-992-4.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Porsche GT3 RS — L'évolution d'une légende">
+  <meta name="twitter:description" content="Vingt ans de radicalité distillés dans une seule machine. L'histoire complète de la Porsche 911 GT3 RS, de la 996 à la 992.">
+  <meta name="twitter:image" content="/assets/images/Porsche-911-GT3-RS-992-4.png">
+  <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
 
@@ -200,7 +209,16 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
   window.onYouTubeIframeAPIReady = function () {
-    const player = new YT.Player('s5-yt');
+    const player = new YT.Player('s5-yt', {
+      events: {
+        onStateChange: function (e) {
+          if (e.data === YT.PlayerState.ENDED) {
+            player.seekTo(0);
+            player.playVideo();
+          }
+        }
+      }
+    });
     const ctrl   = document.getElementById('s5-audio-ctrl');
     const btn    = document.getElementById('s5-mute-btn');
     const slider = document.getElementById('s5-vol-slider');
